@@ -1,5 +1,6 @@
 import { Book } from '../../domain/entities/Book';
 import { DateUtils } from '../../utils/DateUtils';
+import { ValidationConstants } from '../../utils/ValidationConstants';
 
 export class BookValidator {
   validateRequiredFields(book: Book): void {
@@ -17,7 +18,8 @@ export class BookValidator {
   }
 
   validatePublicationYear(year: number): void {
-    const currentYear = new Date().getFullYear();
+    const currentYear = ValidationConstants.getMaxPublicationYear();
+    const minYear = ValidationConstants.MIN_PUBLICATION_YEAR;
 
     if (isNaN(Number(year))) {
       throw new Error('O ano de publicação deve ser um número');
@@ -27,13 +29,19 @@ export class BookValidator {
       throw new Error('O ano de publicação deve ser um número inteiro');
     }
 
-    if (year < 0 || year > currentYear) {
-      throw new Error(`O ano de publicação deve estar entre 0 e ${currentYear}.`);
+    if (year < minYear) {
+      throw new Error(`O ano de publicação deve ser maior que ${minYear - 1}`);
+    }
+
+    if (year > currentYear) {
+      throw new Error(`O ano de publicação não pode ser maior que ${currentYear}`);
     }
   }
 
   validatePageCount(pageCount: number | null): void {
     if (pageCount !== null) {
+      const minPages = ValidationConstants.MIN_PAGE_COUNT;
+
       if (isNaN(Number(pageCount))) {
         throw new Error('O número de páginas deve ser um número');
       }
@@ -42,8 +50,8 @@ export class BookValidator {
         throw new Error('O número de páginas deve ser um número inteiro');
       }
 
-      if (pageCount <= 0) {
-        throw new Error('O número de páginas deve ser maior que zero');
+      if (pageCount < minPages) {
+        throw new Error(`O número de páginas deve ser pelo menos ${minPages}`);
       }
     }
   }

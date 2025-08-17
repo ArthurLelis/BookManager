@@ -3,6 +3,9 @@ import chalk from 'chalk';
 
 import { ILogger } from '../../domain/interfaces/ILogger';
 import { DateUtils } from '../../utils/DateUtils';
+import { IBookInput } from '../../domain/interfaces/IBookInput';
+import { Book } from '../../domain/entities/Book';
+import { ValidationConstants } from '../../utils/ValidationConstants';
 
 export class UserInterface {
   private logger: ILogger;
@@ -44,7 +47,7 @@ export class UserInterface {
     return parseInt(id);
   }
 
-  async promptForBookData(existingBook: any = null): Promise<any> {
+  async promptForBookData(existingBook?: Book): Promise<IBookInput> {
     const isUpdate = !!existingBook;
 
     const questions = [
@@ -75,10 +78,15 @@ export class UserInterface {
           }
 
           const year = parseInt(value);
-          const currentYear = new Date().getFullYear();
+          const currentYear = ValidationConstants.getMaxPublicationYear();
+          const minYear = ValidationConstants.MIN_PUBLICATION_YEAR;
 
-          if (year < 0 || year > currentYear) {
-            return `O ano deve estar entre 0 e ${currentYear}`;
+          if (year < minYear) {
+            return `O ano deve ser maior que ${minYear - 1}`;
+          }
+
+          if (year > currentYear) {
+            return `O ano não pode ser maior que ${currentYear}`;
           }
 
           return true;
@@ -140,9 +148,10 @@ export class UserInterface {
           }
 
           const num = parseInt(value);
+          const minPages = ValidationConstants.MIN_PAGE_COUNT;
 
-          if (num <= 0) {
-            return 'O número de páginas deve ser maior que zero';
+          if (num < minPages) {
+            return `O número de páginas deve ser pelo menos ${minPages}`;
           }
 
           return true;
@@ -184,7 +193,7 @@ export class UserInterface {
     ]);
   }
 
-  displayBookDetails(book: any): void {
+  displayBookDetails(book: Book): void {
     const lastUpdate = book.updatedAt ? new Date(book.updatedAt).toLocaleString() : 'Sem atualização';
 
     console.log(chalk.green(`Livro encontrado:`));
@@ -202,7 +211,7 @@ export class UserInterface {
     console.log(`Última Atualização: ${lastUpdate}`);
   }
 
-  displayBookList(books: any[]): void {
+  displayBookList(books: Book[]): void {
     if (books.length === 0) {
       console.log(chalk.yellow('Nenhum livro cadastrado.'));
       return;

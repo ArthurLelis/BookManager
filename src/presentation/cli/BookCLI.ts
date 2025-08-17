@@ -2,6 +2,7 @@ import { BookService } from '../../application/services/BookService';
 import { ILogger } from '../../domain/interfaces/ILogger';
 import { UserInterface } from './UserInterface';
 import { MenuOption, menuChoices } from './MenuOptions';
+import { IBookInput } from '../../domain/interfaces/IBookInput';
 
 export class BookCLI {
   private bookService: BookService;
@@ -43,7 +44,7 @@ export class BookCLI {
           break;
         case MenuOption.EXIT:
           this.ui.displayGoodbye();
-          process.exit(0);
+          return;
       }
 
     } catch (error) {
@@ -92,7 +93,7 @@ export class BookCLI {
     console.log('CADASTRAR NOVO LIVRO \n');
 
     try {
-      const bookData = await this.ui.promptForBookData();
+      const bookData: IBookInput = await this.ui.promptForBookData();
       const book = await this.bookService.createBook(bookData);
       this.ui.displaySuccess(`Livro cadastrado com sucesso! ID: ${book.id}`);
     } catch (error) {
@@ -119,8 +120,8 @@ export class BookCLI {
       this.ui.displaySuccess(`Livro encontrado: "${existingBook.title}" de ${existingBook.author}`);
       this.ui.displayWarning('Preencha os novos dados do livro (deixe em branco para manter o valor atual):');
 
-      const bookData = await this.ui.promptForBookData(existingBook);
-      await this.bookService.updateBook(id, bookData);
+      const bookData: IBookInput = await this.ui.promptForBookData(existingBook);
+      await this.bookService.updateBook(id, { id, ...bookData });
       this.ui.displaySuccess(`Livro com ID ${id} atualizado com sucesso!`);
     } catch (error) {
       this.ui.displayError(`Erro ao atualizar livro: ${error instanceof Error ? error.message : String(error)}`);

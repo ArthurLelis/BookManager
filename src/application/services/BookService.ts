@@ -4,6 +4,7 @@ import { ILogger } from '../../domain/interfaces/ILogger';
 import { BookValidator } from '../validators/BookValidator';
 import { CreateBookDTO } from '../../domain/dto/CreateBookDTO';
 import { UpdateBookDTO } from '../../domain/dto/UpdateBookDTO';
+import { IBookInput, IBookUpdateInput } from '../../domain/interfaces/IBookInput';
 
 export class BookService {
   private repository: IBookRepository;
@@ -34,7 +35,7 @@ export class BookService {
     }
   }
 
-  async createBook(bookData: any): Promise<Book> {
+  async createBook(bookData: IBookInput): Promise<Book> {
     try {
       const createBookDTO = new CreateBookDTO(bookData);
       const book = createBookDTO.toEntity();
@@ -46,7 +47,7 @@ export class BookService {
     }
   }
 
-  async updateBook(id: number, bookData: any): Promise<Book> {
+  async updateBook(id: number, bookData: IBookUpdateInput): Promise<Book> {
     try {
       const existingBook = await this.repository.findById(id);
 

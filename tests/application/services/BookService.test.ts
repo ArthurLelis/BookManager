@@ -26,11 +26,11 @@ jest.mock('../../../src/domain/dto/CreateBookDTO', () => {
           return new Book({
             title: data.title || '',
             author: data.author || '',
-            publicationYear: data.publicationYear || 0,
+            publicationYear: parseInt(data.publicationYear) || 0,
             publisher: data.publisher,
             genre: data.genre,
             acquisitionDate: data.acquisitionDate,
-            pageCount: data.pageCount,
+            pageCount: data.pageCount ? parseInt(data.pageCount) : null,
             description: data.description
           });
         })
@@ -80,10 +80,10 @@ describe('BookService', () => {
   const sampleBookData = {
     title: 'O Hobbit',
     author: 'J.R.R. Tolkien',
-    publicationYear: 1937,
+    publicationYear: '1937',
     publisher: 'Allen & Unwin',
     genre: 'Fantasia',
-    pageCount: 310
+    pageCount: '310'
   };
 
   const updatedBookData = {
@@ -175,10 +175,10 @@ describe('BookService', () => {
         id: 1,
         title: sampleBookData.title,
         author: sampleBookData.author,
-        publicationYear: sampleBookData.publicationYear,
+        publicationYear: parseInt(sampleBookData.publicationYear),
         publisher: sampleBookData.publisher,
         genre: sampleBookData.genre,
-        pageCount: sampleBookData.pageCount,
+        pageCount: parseInt(sampleBookData.pageCount),
         createdAt: expect.any(String)
       });
 
@@ -205,7 +205,7 @@ describe('BookService', () => {
 
       bookService = new BookService(mockRepository, mockLogger);
 
-      await expect(bookService.createBook({ author: 'Autor sem título' })).rejects.toThrow(validationError);
+      await expect(bookService.createBook({ title: '', author: 'Autor sem título', publicationYear: '2023' })).rejects.toThrow(validationError);
       expect(mockValidateBook).toHaveBeenCalled();
       expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Erro ao criar livro'));
       expect(mockRepository.create).not.toHaveBeenCalled();
@@ -271,7 +271,7 @@ describe('BookService', () => {
 
       bookService = new BookService(mockRepository, mockLogger);
 
-      await expect(bookService.createBook({ author: 'Autor sem título' })).rejects.toThrow(validationError);
+      await expect(bookService.createBook({ title: '', author: 'Autor sem título', publicationYear: '2023' })).rejects.toThrow(validationError);
       expect(mockValidateBook).toHaveBeenCalled();
       expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Erro ao criar livro'));
       expect(mockRepository.create).not.toHaveBeenCalled();

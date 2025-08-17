@@ -82,14 +82,13 @@ describe('BookValidator', () => {
     });
 
     test('deve lançar erro quando o ano de publicação é negativo', () => {
-      const currentYear = new Date().getFullYear();
-      expect(() => validator.validatePublicationYear(-1)).toThrow(`O ano de publicação deve estar entre 0 e ${currentYear}.`);
+      expect(() => validator.validatePublicationYear(-1)).toThrow(`O ano de publicação deve ser maior que 0`);
     });
 
     test('deve lançar erro quando o ano de publicação é maior que o ano atual', () => {
       const currentYear = new Date().getFullYear();
       const futureYear = currentYear + 1;
-      expect(() => validator.validatePublicationYear(futureYear)).toThrow(`O ano de publicação deve estar entre 0 e ${currentYear}.`);
+      expect(() => validator.validatePublicationYear(futureYear)).toThrow(`O ano de publicação não pode ser maior que ${currentYear}`);
     });
   });
 
@@ -111,8 +110,8 @@ describe('BookValidator', () => {
     });
 
     test('deve lançar erro quando o número de páginas é zero ou negativo', () => {
-      expect(() => validator.validatePageCount(0)).toThrow('O número de páginas deve ser maior que zero');
-      expect(() => validator.validatePageCount(-1)).toThrow('O número de páginas deve ser maior que zero');
+      expect(() => validator.validatePageCount(0)).toThrow('O número de páginas deve ser pelo menos 1');
+      expect(() => validator.validatePageCount(-1)).toThrow('O número de páginas deve ser pelo menos 1');
     });
   });
 
@@ -204,7 +203,7 @@ describe('BookValidator', () => {
         pageCount: -1
       });
 
-      expect(() => validator.validateBook(book)).toThrow('O número de páginas deve ser maior que zero');
+      expect(() => validator.validateBook(book)).toThrow('O número de páginas deve ser pelo menos 1');
     });
   });
 });

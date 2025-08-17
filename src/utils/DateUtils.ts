@@ -1,5 +1,13 @@
 export class DateUtils {
   /**
+  * Retorna a data atual
+  * @returns Objeto Date representando a data atual
+  */
+  static getCurrentDate(): Date {
+    return new Date();
+  }
+
+  /**
    * Converte uma string de data no formato DD/MM/YYYY para um objeto Date
    * @param dateString String de data no formato DD/MM/YYYY
    * @returns Objeto Date ou null se a data for inválida
@@ -77,17 +85,17 @@ export class DateUtils {
   }
 
   /**
-   * Verifica se uma data é válida e não é futura
-   * @param dateString String de data no formato DD/MM/YYYY
-   * @returns true se a data for válida e não for futura, false caso contrário
-   */
+  * Verifica se uma data é válida e não é futura
+  * @param dateString String de data no formato DD/MM/YYYY
+  * @returns true se a data for válida e não for futura, false caso contrário
+  */
   static isValidPastOrPresentDate(dateString: string): boolean {
     if (!dateString) return true;
 
     const date = this.parseDate(dateString);
     if (!date) return false;
 
-    const today = new Date();
+    const today = this.getCurrentDate();
     today.setHours(0, 0, 0, 0);
 
     return date <= today;

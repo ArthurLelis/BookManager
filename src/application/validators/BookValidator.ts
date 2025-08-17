@@ -19,8 +19,12 @@ export class BookValidator {
   validatePublicationYear(year: number): void {
     const currentYear = new Date().getFullYear();
 
-    if (isNaN(year)) {
-      throw new Error('O ano de publicação deve ser um número.');
+    if (isNaN(Number(year))) {
+      throw new Error('O ano de publicação deve ser um número');
+    }
+
+    if (!Number.isInteger(year)) {
+      throw new Error('O ano de publicação deve ser um número inteiro');
     }
 
     if (year < 0 || year > currentYear) {
@@ -31,27 +35,30 @@ export class BookValidator {
   validatePageCount(pageCount: number | null): void {
     if (pageCount !== null) {
       if (isNaN(Number(pageCount))) {
-        throw new Error('O número de páginas deve ser um número.');
+        throw new Error('O número de páginas deve ser um número');
       }
 
-      if (Number(pageCount) <= 0) {
-        throw new Error('O número de páginas deve ser maior que zero.');
+      if (!Number.isInteger(pageCount)) {
+        throw new Error('O número de páginas deve ser um número inteiro');
+      }
+
+      if (pageCount <= 0) {
+        throw new Error('O número de páginas deve ser maior que zero');
       }
     }
   }
 
-  validateAcquisitionDate(date: string | null): void {
-    if (!date) return; // Data opcional
+  validateAcquisitionDate(dateString: string | null): void {
+    if (!dateString) {
+      return;
+    }
 
-    const parsedDate = DateUtils.parseDate(date);
+    const parsedDate = DateUtils.parseDate(dateString);
     if (!parsedDate) {
       throw new Error('A data de aquisição deve estar no formato DD/MM/YYYY e ser uma data válida');
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (parsedDate > today) {
+    if (!DateUtils.isValidPastOrPresentDate(dateString)) {
       throw new Error('A data de aquisição não pode ser uma data futura');
     }
   }

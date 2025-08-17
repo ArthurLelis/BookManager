@@ -9,29 +9,65 @@ O sistema permite **cadastrar, listar, buscar, atualizar e excluir livros** atra
 
 ```bash
 bookmanager/
-├── sql/
-│ └── init.sql                 # Script SQL para inicialização do banco de dados
-├── src/
-│ ├── application/             # Camada de aplicação
-│ │ ├── services/              # Serviços da aplicação
-│ │ └── validators/            # Validadores de dados
-│ ├── config/                  # Configurações
-│ ├── domain/                  # Camada de domínio
-│ │ ├── dto/                   # Data Transfer Objects
-│ │ ├── entities/              # Entidades de domínio
-│ │ └── interfaces/            # Interfaces e contratos
-│ ├── infrastructure/          # Camada de infraestrutura
-│ │ ├── database/              # Implementações de acesso a dados
-│ │ └── logging/               # Implementações de logging
-│ ├── presentation/            # Camada de apresentação
-│ │ └── cli/                   # Interface de linha de comando
-│ ├── utils/                   # Utilitários
-│ └── app.ts                   # Ponto de entrada da aplicação
-├── tests/                     # Testes automatizados
-├── docker-compose.yml         # Configuração do Docker Compose
-├── Dockerfile                 # Configuração do Docker
-├── jest.config.js             # Configuração do Jest para testes
-└── tsconfig.json              # Configuração do TypeScript
+├── sql/                                        # Scripts SQL para banco de dados
+│   └── init.sql                                # Script SQL para inicialização do banco de dados
+├── src/                                        # Código-fonte da aplicação
+│   ├── application/                            # Camada de aplicação
+│   │   ├── services/                           # Serviços da aplicação
+│   │   │   └── BookService.ts                  # Serviço para gerenciamento de livros
+│   │   ├── validators/                         # Validadores de dados
+│   │   │   └── BookValidator.ts                # Validador para entidades de livros
+│   │   └── config/                             # Configurações
+│   │       ├── database.ts                     # Configuração de conexão com banco de dados
+│   │       └── initDb.ts                       # Inicialização do banco de dados
+│   ├── domain/                                 # Camada de domínio
+│   │   ├── dto/                                # Data Transfer Objects
+│   │   │   ├── BookDTO.ts                      # DTO para transferência de dados de livros
+│   │   │   ├── CreateBookDTO.ts                # DTO para criação de livros
+│   │   │   └── UpdateBookDTO.ts                # DTO para atualização de livros
+│   │   ├── entities/                           # Entidades de domínio
+│   │   │   └── Book.ts                         # Entidade de livro
+│   │   └── interfaces/                         # Interfaces e contratos
+│   │       ├── IBookInput.ts                   # Interface para entrada de dados de livros
+│   │       ├── IBookRepository.ts              # Interface para repositório de livros
+│   │       └── ILogger.ts                      # Interface para sistema de logs
+│   ├── infrastructure/                         # Camada de infraestrutura
+│   │   ├── database/                           # Implementações de acesso a dados
+│   │   │   └── SQLiteBookRepository.ts         # Repositório SQLite para livros
+│   │   └── logging/                            # Implementações de logging
+│   │       └── Logger.ts                       # Implementação do logger
+│   ├── presentation/                           # Camada de apresentação
+│   │   └── cli/                                # Interface de linha de comando
+│   │       ├── BookCLI.ts                      # CLI para gerenciamento de livros
+│   │       ├── MenuOptions.ts                  # Opções de menu para a CLI
+│   │       └── UserInterface.ts                # Interface com o usuário
+│   ├── utils/                                  # Utilitários
+│   │   ├── DateUtils.ts                        # Utilitários para manipulação de datas
+│   │   └── ValidationConstants.ts              # Constantes para validação
+│   └── app.ts                                  # Ponto de entrada da aplicação
+├── tests/                                      # Testes automatizados
+│   ├── application/                            # Testes da camada de aplicação
+│   │   ├── services/                           # Testes de serviços
+│   │   │   └── BookService.test.ts             # Testes do serviço de livros
+│   │   └── validators/                         # Testes de validadores
+│   │       └── BookValidator.test.ts           # Testes do validador de livros
+│   ├── domain/                                 # Testes da camada de domínio
+│   │   ├── dto/                                # Testes de DTOs
+│   │   │   └── BookDTO.test.ts                 # Testes do DTO de livros
+│   │   └── entities/                           # Testes de entidades
+│   │       └── Book.test.ts                    # Testes da entidade de livro
+│   └── infrastructure/                         # Testes da camada de infraestrutura
+│       └── database/                           # Testes de acesso a dados
+│           └── SQLiteBookRepository.test.ts    # Testes do repositório SQLite
+├── .dockerignore                               # Arquivos a serem ignorados pelo Docker
+├── .gitignore                                  # Arquivos a serem ignorados pelo Git
+├── docker-compose.yml                          # Configuração do Docker Compose
+├── Dockerfile                                  # Configuração do Docker
+├── jest.config.js                              # Configuração do Jest para testes
+├── package-lock.json                           # Lock de dependências do npm
+├── package.json                                # Configuração do projeto e dependências
+├── README.md                                   # Documentação do projeto
+└── tsconfig.json                               # Configuração do TypeScript
 ```
 
 ---
